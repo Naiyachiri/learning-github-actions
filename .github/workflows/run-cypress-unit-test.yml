@@ -1,0 +1,79 @@
+name: run-cypress-unit-test
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  basic-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+      # install and prepare Cypress
+    - name: Cypress run
+      uses: cypress-io/github-action@v2
+      with:
+        spec: cypress/integration/1-getting-started/*
+        build: npx cypress info
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  basic-mac:
+    runs-on: macos-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+      # install and prepare Cypress
+    - name: Cypress run
+      uses: cypress-io/github-action@v2
+      with:
+        spec: cypress/integration/1-getting-started/*
+        build: npx cypress info
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  basic-on-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cypress tests
+        uses: cypress-io/github-action@v2
+        with:
+          spec: cypress/integration/1-getting-started/*
+          build: npx cypress info
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  chrome:
+    runs-on: ubuntu-20.04
+    # let's make sure our tests pass on Chrome browser
+    name: E2E on Chrome
+    steps:
+      - uses: actions/checkout@v2
+      - uses: cypress-io/github-action@v2
+        with:
+          spec: cypress/integration/1-getting-started/*
+          browser: chrome
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  firefox:
+    runs-on: ubuntu-latest
+    container:
+      image: cypress/browsers:node12.16.1-chrome80-ff73
+      options: --user 1001
+    steps:
+      - uses: actions/checkout@v2
+      - uses: cypress-io/github-action@v2
+        with:
+          spec: cypress/integration/1-getting-started/*
+          browser: firefox
+        env:
+        # note github tokens allow for re-running of a build without requiring meaningless commits
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
