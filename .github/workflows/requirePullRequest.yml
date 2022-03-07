@@ -1,0 +1,13 @@
+name: require-pull-request-for-merge-on-main
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  job:
+    name: require-pull-request-on-main
+    runs-on: ubuntu-latest
+      steps:
+        -run: echo hello
