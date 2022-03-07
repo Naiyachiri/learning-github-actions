@@ -16,9 +16,9 @@ jobs:
     - name: Cypress run
       uses: cypress-io/github-action@v2
       with:
-        spec: cypress/integration/1-getting-started/*
-        build: npx cypress info
         start: yarn start
+        build: npx cypress info
+        spec: cypress/integration/1-getting-started/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -32,9 +32,9 @@ jobs:
     - name: Cypress run
       uses: cypress-io/github-action@v2
       with:
+        start: yarn start
         spec: cypress/integration/1-getting-started/*
         build: npx cypress info
-        start: yarn start
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -47,9 +47,9 @@ jobs:
       - name: Cypress tests
         uses: cypress-io/github-action@v2
         with:
+          start: yarn start
           spec: cypress/integration/1-getting-started/*
           build: npx cypress info
-          start: yarn start
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -61,9 +61,9 @@ jobs:
       - uses: actions/checkout@v2
       - uses: cypress-io/github-action@v2
         with:
+          start: yarn start
           spec: cypress/integration/1-getting-started/*
           browser: chrome
-          start: yarn start
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -76,9 +76,9 @@ jobs:
       - uses: actions/checkout@v2
       - uses: cypress-io/github-action@v2
         with:
+          start: yarn start
           spec: cypress/integration/1-getting-started/*
           browser: firefox
-          start: yarn start
         env:
         # note github tokens allow for re-running of a build without requiring meaningless commits
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
