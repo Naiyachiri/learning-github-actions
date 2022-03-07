@@ -16,8 +16,9 @@ jobs:
     - name: Cypress run
       uses: cypress-io/github-action@v2
       with:
-        spec: cypress/integration/1-getting-started/*
+        start: yarn start
         build: npx cypress info
+        spec: cypress/integration/1-getting-started/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -31,6 +32,7 @@ jobs:
     - name: Cypress run
       uses: cypress-io/github-action@v2
       with:
+        start: yarn start
         spec: cypress/integration/1-getting-started/*
         build: npx cypress info
       env:
@@ -45,6 +47,7 @@ jobs:
       - name: Cypress tests
         uses: cypress-io/github-action@v2
         with:
+          start: yarn start
           spec: cypress/integration/1-getting-started/*
           build: npx cypress info
         env:
@@ -58,6 +61,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: cypress-io/github-action@v2
         with:
+          start: yarn start
           spec: cypress/integration/1-getting-started/*
           browser: chrome
         env:
@@ -72,6 +76,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: cypress-io/github-action@v2
         with:
+          start: yarn start
           spec: cypress/integration/1-getting-started/*
           browser: firefox
         env:
