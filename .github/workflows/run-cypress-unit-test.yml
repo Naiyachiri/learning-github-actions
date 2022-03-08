@@ -6,55 +6,55 @@ on:
     #   - 'main'
 
 jobs:
-  basic-ubuntu:
-    runs-on: ubuntu-latest
-    name: E2E on basic ubuntu
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+  # basic-ubuntu:
+  #   runs-on: ubuntu-latest
+  #   name: E2E on basic ubuntu
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v2
 
-      # install and prepare Cypress
-    - name: Cypress run
-      uses: cypress-io/github-action@v2
-      with:
-        start: yarn start
-        build: npx cypress info
-        spec: cypress/integration/1-getting-started/*
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     # install and prepare Cypress
+  #   - name: Cypress run
+  #     uses: cypress-io/github-action@v2
+  #     with:
+  #       start: yarn start
+  #       build: npx cypress info
+  #       spec: cypress/integration/1-getting-started/*
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  basic-mac:
-    runs-on: macos-latest
-    name: E2E on macOS
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+  # basic-mac:
+  #   runs-on: macos-latest
+  #   name: E2E on macOS
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v2
 
-      # install and prepare Cypress
-    - name: Cypress run
-      uses: cypress-io/github-action@v2
-      with:
-        start: yarn start
-        spec: cypress/integration/1-getting-started/*
-        build: npx cypress info
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     # install and prepare Cypress
+  #   - name: Cypress run
+  #     uses: cypress-io/github-action@v2
+  #     with:
+  #       start: yarn start
+  #       spec: cypress/integration/1-getting-started/*
+  #       build: npx cypress info
+  #     env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  basic-on-windows:
-    runs-on: windows-latest
-    name: E2E on windows
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  # basic-on-windows:
+  #   runs-on: windows-latest
+  #   name: E2E on windows
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
 
-      - name: Cypress tests
-        uses: cypress-io/github-action@v2
-        with:
-          start: yarn start
-          spec: cypress/integration/1-getting-started/*
-          build: npx cypress info
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Cypress tests
+  #       uses: cypress-io/github-action@v2
+  #       with:
+  #         start: yarn start
+  #         spec: cypress/integration/1-getting-started/*
+  #         build: npx cypress info
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   chrome:
     runs-on: ubuntu-20.04
