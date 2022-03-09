@@ -1,4 +1,4 @@
-name: require-pull-request-for-merge-on-main
+name: Require Pull Request for Pushing to Main
 
 on:
   pull_request:
@@ -6,8 +6,7 @@ on:
       - main
 
 jobs:
-  require-pull-request-on-main:
-
+  job:
     name: require-pull-request-on-main
     runs-on: ubuntu-latest
       steps:

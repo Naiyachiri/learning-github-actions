@@ -1,4 +1,4 @@
-name: run-cypress-unit-test
+name: Run Cypress Unit Test
 
 on:
   push:
