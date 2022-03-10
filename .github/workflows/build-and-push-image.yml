@@ -1,0 +1,70 @@
+# Reusuable dockerhub action
+name: Slug Build & Push to Dockerhub
+
+on:
+  workflow_call:
+    input:
+     DOCKER_REPO:
+     required: true
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
+      GITHUB_TOKEN:
+        required: true
+    outputs:
+      slug-tag:
+        description: "The generated tag from the built image"
+        value: ${{ jobs.image-build.outputs.image-tag }}
+
+jobs:
+  image-build:
+    name: Build an Image and push to Docker Hub
+    runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.metadata.outputs.repo }}:${{ steps.metadata.outputs.tag }}
+
+    steps:
+      - name: Checkout Target Branch
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # VERIFY THE IMAGES ARE BEING PUSHED TO THE RIGHT DOCKER_REPO, note it is HARDCODED
+      - name: Generate Metadata
+        id: metadata
+        run: |
+          GIT_BRANCH=${GITHUB_REF#refs/heads/}
+          GIT_SHA=$(git rev-parse --short "$GITHUB_SHA")
+          if [[ $GIT_BRANCH == "main" ]]; then
+            TAG=$(date '+%Y%m%d%H%M%S')-$GIT_SHA
+            DOCKER_REPO= ${{ input.DOCKER_REPO }}
+          else
+            PR_ID=$(gh pr view --json number -q .number || echo "")
+            TAG=$(date '+%Y%m%d%H%M%S')-$PR_ID
+            DOCKER_REPO=${{ input.DOCKER_REPO }}-pr
+          fi
+          echo "::set-output name=tag::$TAG"
+          echo "::set-output name=repo::$DOCKER_REPO"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build yarn and dependencies
+          run: yarn build
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        env:
+
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.metadata.outputs.repo }}:${{ steps.metadata.outputs.tag }}
