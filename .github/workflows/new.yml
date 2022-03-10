@@ -1,0 +1,11 @@
+name: Novel workflow to be picked up
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "hey i got picked up"
