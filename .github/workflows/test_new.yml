@@ -1,0 +1,10 @@
+name: testing workflow updates
+
+on:
+  push:
+
+jobs:
+  job:
+    steps:
+      - name: echo
+        run: echo 'test'
