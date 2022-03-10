@@ -14,3 +14,4 @@ https://mherman.org/blog/dockerizing-a-react-app/
 - add related .dockerignore
 - docker run -it --rm -v ${PWD}:/app -v /app/node_modules -p 3001:3000 -e CHOKIDAR_USEPOLLING=true sample:dev
 - create docker-compose.yml to simplify the start up command
+
