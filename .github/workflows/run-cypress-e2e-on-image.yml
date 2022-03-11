@@ -1,0 +1,60 @@
+# Reusuable dockerhub action
+name: Load Image from Dockerhub and Run Cypress
+
+on:
+  workflow_call:
+    input:
+      DOCKER_TAG:
+        required: true
+
+jobs:
+  run_cypress:
+    runs-on: ubuntu-latest
+    container: cypress/browsers:node16.14.0-chrome99-ff97
+
+    services:
+    # setup db infrastructure for avalon to run against
+      redis:
+        image: redis
+      elasticsearch:
+        image: elasticsearch:7.8.1
+      postgres:
+        image: postgres:11.14-alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: avalon
+          # Set health checks to wait until postgres has started
+          options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+      maildev:
+        image: maildev/maildev:1.1.0
+
+    steps:
+      - name: Checkout Target Branch
+        uses: actions/checkout@v2
+
+      - name: Cypress install
+        uses: cypress-io/github-action@v2
+        with:
+          runTests: false
+        # report machine parameters
+        - run: yarn cypress info
+        - run: node -p 'os.cpus()'
+        - run: yarn types
+        - run: yarn lint
+        - run: yarn test:unit:ci
+        - run: yarn build:ci
+
+      - name: Import seed data to dbs
+        run: psql -d postgresql://postgres@localhost/avalon -f ./docker/postgressql/postgres_init.sql
+
+      - name: Run avalon service
+        run: docker run
+      - name: Run e2e Tests
+        uses: cypress-io/github-action@v2
+          with:
+            install: false
+          working-directory: cypress

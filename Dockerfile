@@ -1,19 +1,17 @@
-# pull official base image
-FROM node:16.14.0-alpine
-
-# set working directory
+# build environment
+FROM node:16.14.0-alpine as build
 WORKDIR /learning-github-actions
-
-# add `/app/node_modules/.bin` to $PATH
 ENV PATH /learning-github-actions/node_modules/.bin:$PATH
-
-# install app dependencies
 COPY package.json ./
 COPY yarn.lock ./
-RUN yarn install
-
-# add app
+# yarn equivalent of npm ci https://docs.npmjs.com/cli/v8/commands/npm-ci
+RUN yarn install --frozen-lockfile
+RUN yarn global add react-scripts@3.4.1 --silent
 COPY . ./
+RUN yarn run build
 
-# start app
-CMD ["yarn", "start"]
+# production environment
+FROM nginx:stable-alpine
+COPY --from=build /learning-github-actions/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
