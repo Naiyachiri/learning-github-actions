@@ -6,7 +6,6 @@ COPY package.json ./
 COPY yarn.lock ./
 # yarn equivalent of npm ci https://docs.npmjs.com/cli/v8/commands/npm-ci
 RUN yarn install --frozen-lockfile
-RUN yarn global add react-scripts@3.4.1 --silent
 COPY . ./
 RUN yarn run build
 

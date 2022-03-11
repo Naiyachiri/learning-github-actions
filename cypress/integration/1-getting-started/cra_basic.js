@@ -1,4 +1,4 @@
-/// <reference types="cypress" />
+// / <reference types="cypress" />
 
 // Welcome to Cypress!
 //
@@ -13,7 +13,7 @@
 
 describe('Examines a basic CRA app', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000')
+    cy.visit(Cypress.env('HOST'))
   })
 
   it('displays the rotating react icon', () => {

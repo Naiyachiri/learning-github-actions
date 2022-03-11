@@ -3,58 +3,62 @@ name: Load Image from Dockerhub and Run Cypress
 
 on:
   workflow_call:
-    input:
+    inputs:
       DOCKER_TAG:
+        type: string
         required: true
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
+
+# jobs:
+#   run_cypress:
+#     runs-on: ubuntu-latest
 
 jobs:
   run_cypress:
     runs-on: ubuntu-latest
-    container: cypress/browsers:node16.14.0-chrome99-ff97
+    # all services are in a single docker network, so they will be able to communicate,
+    # if the tester is run in a container no ports need to be exposed and host names are
+    # equivalent to the service id below
+    # cypress/browsers:node16.5.0-chrome97-ff96
+    container: cypress/included:9.5.1
 
     services:
-    # setup db infrastructure for avalon to run against
       redis:
-        image: redis
-      elasticsearch:
-        image: elasticsearch:7.8.1
+        image: redis:5.0-alpine
+        ports:
+          - 6379
       postgres:
         image: postgres:11.14-alpine
-        env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: avalon
-          # Set health checks to wait until postgres has started
-          options: >-
-            --health-cmd pg_isready
-            --health-interval 10s
-            --health-timeout 5s
-            --health-retries 5
+        ports:
+          - 5432
       maildev:
         image: maildev/maildev:1.1.0
+        ports:
+          - 80
+      elasticsearch:
+        image: elasticsearch:7.8.1
+        ports:
+          - 9200
+        env:
+          discovery.type: single-node
+      web-app:
+        image: ${{ inputs.DOCKER_TAG }}
+        ports:
+          - 3000
+        credentials:
+          username: ${{ secrets.DOCKERHUB_USERNAME}}
+          password: ${{ secrets.DOCKERHUB_TOKEN}}
 
     steps:
-      - name: Checkout Target Branch
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Cypress install
-        uses: cypress-io/github-action@v2
-        with:
-          runTests: false
-        # report machine parameters
-        - run: yarn cypress info
-        - run: node -p 'os.cpus()'
-        - run: yarn types
-        - run: yarn lint
-        - run: yarn test:unit:ci
-        - run: yarn build:ci
-
-      - name: Import seed data to dbs
-        run: psql -d postgresql://postgres@localhost/avalon -f ./docker/postgressql/postgres_init.sql
-
-      - name: Run avalon service
-        run: docker run
-      - name: Run e2e Tests
-        uses: cypress-io/github-action@v2
-          with:
-            install: false
-          working-directory: cypress
+      - name: Cypress run
+        run: cypress run --spec "cypress/integration/1-getting-started/*"
+        env:
+        # NOTE in the CI pipeline the services are exposed via docker network as the service id (name)
+          CYPRESS_HOST: http://web-app

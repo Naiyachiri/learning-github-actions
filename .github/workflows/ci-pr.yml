@@ -14,69 +14,57 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
-  debugger-call-flow:
-    runs-on: ubuntu-latest
-    name: Echo the outputs!
+  run-unit-tests:
+    name: Run Cypress Test
     needs: build-and-push-slug
-    steps:
+    uses: './.github/workflows/run-cypress-e2e-on-image.yml'
+    with:
+      DOCKER_TAG: ${{ needs.build-and-push-slug.outputs.image-tag}}
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: echo the output tag
-        run: echo ${{ needs.build-and-push-slug.outputs.image-tag }}
+    # name: Run Cypress Unit Tests
+    # runs-on: ubuntu-latest
+    # needs: build-and-push-image
 
-      - name: echo the test output
-        run: echo ${{ needs.build-and-push-slug.outputs.test }}
-    # runs-on:  ubuntu-latest
-    #   steps:
-    #     - uses: ./.github/workflows/build-and-cache-image.yml
-    #       with:
-    #         DOCKER_REPO: jamesvobui/learning-github-actions
-    #       secrets:
-    #         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-    #         DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    # container: cypress/browsers:node12.18.3-chrome87-ff82
 
-  # run-unit-tests:
-  #   name: Run Cypress Unit Tests
-  #   runs-on: ubuntu-latest
-  #   needs: build-and-push-image
+    # # Spin up all the services and exposed related ports
+    # services:
+    #   sample:
+    #     image: ${{ needs.job1.outputs.slug-tag }}
+    #     ports:
+    #       - 8000:8000
 
-  #   container: cypress/browsers:node12.18.3-chrome87-ff82
+    #   elasticsearch:
+    #     image: elasticsearch:7.8.1
+    #     ports:
+    #       - 9200:9200
+    #       - 9300:9300
+    #   redis:
+    #     image: redis:5.0-alpine
+    #     ports:
+    #       - 6379:6379
+    #   maildev:
+    #     image: maildev/maildev:1.1.0
 
-  #   # Spin up all the services and exposed related ports
-  #   services:
-  #     sample:
-  #       image: ${{ needs.job1.outputs.slug-tag }}
-  #       ports:
-  #         - 8000:8000
+    # steps:
+    #   - name: Checkout Target Branch
+    #     uses: actions/checkout@v2
 
-  #     elasticsearch:
-  #       image: elasticsearch:7.8.1
-  #       ports:
-  #         - 9200:9200
-  #         - 9300:9300
-  #     redis:
-  #       image: redis:5.0-alpine
-  #       ports:
-  #         - 6379:6379
-  #     maildev:
-  #       image: maildev/maildev:1.1.0
-
-  #   steps:
-  #     - name: Checkout Target Branch
-  #       uses: actions/checkout@v2
-
-  #     # install yarn & cypress
-  #     - name: Install and Setup Cypress
-  #       uses: cypress-io/github-action@v2
-  #       env:
-  #         CYPRESS_host: localhost
-  #         CYPRESS_port: 8000
-  #         # CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-  #         # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       with:
-  #         # record: true
-  #         working-directory: cypress
-  #         build: yarn run build
-  #         wait-on: 'http://sample:8000'
-  #         wait-on-timeout: 120
-  #         start: yarn
+    #   # install yarn & cypress
+    #   - name: Install and Setup Cypress
+    #     uses: cypress-io/github-action@v2
+    #     env:
+    #       CYPRESS_host: localhost
+    #       CYPRESS_port: 8000
+    #       # CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+    #       # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     with:
+    #       # record: true
+    #       working-directory: cypress
+    #       build: yarn run build
+    #       wait-on: 'http://sample:8000'
+    #       wait-on-timeout: 120
+    #       start: yarn

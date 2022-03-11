@@ -48,7 +48,8 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          # making the username not a secret allows it to be used as a repo/ which is common in personal repo patterns
+          username: jamesvobui
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       # VERIFY THE IMAGES ARE BEING PUSHED TO THE RIGHT DOCKER_REPO, note it is HARDCODED
