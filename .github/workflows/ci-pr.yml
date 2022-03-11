@@ -21,7 +21,10 @@ jobs:
     steps:
 
       - name: echo the output tag
-        run: echo ${{ needs.build-and-push-slug.outputs.pr-tag }}
+        run: echo ${{ needs.build-and-push-slug.outputs.image-tag }}
+
+      - name: echo the test output
+        run: echo ${{ needs.build-and-push-slug.outputs.test }}
     # runs-on:  ubuntu-latest
     #   steps:
     #     - uses: ./.github/workflows/build-and-cache-image.yml
