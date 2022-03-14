@@ -3,7 +3,8 @@ name: Pull Request Quality Check
 
 on:
   push:
-
+    branches:
+      - naiyachiri/cypress-test
 jobs:
   build-and-push-slug:
     name: Build Slug And Push for Testing
