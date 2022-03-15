@@ -3,7 +3,7 @@ name: QA after build-and-push-image
 # testing that the workflow run will automatically trigger off of a build workflow's completion
 on:
   workflow_run:
-    workflows: [ Slug Build & Push to Dockerhub ]
+    workflows: [test]
     types:
       - completed
 

@@ -1,0 +1,12 @@
+name: test
+# tests workflow_run picking up the test.yml action
+
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: echo test
+        run: echo test
