@@ -3,12 +3,31 @@ version: '3.7'
 services:
 
   cra:
-    image: react:app
+    image: $TAG
+    # build:
+    #   context: .
     # mounting the source directory with the following env allows warm reloading
     volumes:
       - '.:/learning-github-actions'
       - '/learning-github-actions/node_modules'
     ports:
-      - 3001:3000
+      - 3001:80
+      # - 3000:80
     environment:
       - CHOKIDAR_USEPOLLING=true
+
+# cannot build on m1 macs
+  test:
+    image: cypress/included:9.5.1
+    depends_on:
+      - cra
+    working_dir: /e2e
+    volumes:
+      - '.:/e2e'
+    command: "--spec cypress/integration/1-getting-started/*"
+    environment:
+      # note: inside the docker network its 80
+      - CYPRESS_BASE_URL=http://cra:80
+      - CYPRESS_RECORD_KEY=$CYPRESS_RECORD_KEY
+      # GROUP_NAME is arbitrary and determines what header the specs all get organized under in cypress
+      - GROUP_NAME="4x-electron on GitHub Runner"
