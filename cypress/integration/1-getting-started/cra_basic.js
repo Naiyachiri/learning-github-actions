@@ -13,7 +13,7 @@
 
 describe('Examines a basic CRA app', () => {
   beforeEach(() => {
-    cy.visit(Cypress.env('HOST'))
+    cy.visit('/')
   })
 
   it('displays the rotating react icon', () => {

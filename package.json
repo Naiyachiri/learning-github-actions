@@ -16,7 +16,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "e2e": "cypress open"
+    "e2e": "cypress open",
+    "cypress": "cypress run --env HOST='localhost:3000' --spec='cypress/integration/1-getting-started/cra_basic.js'"
   },
   "eslintConfig": {
     "extends": [
