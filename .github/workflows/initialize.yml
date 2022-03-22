@@ -7,4 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup SSH Session
-        uses: lhotari/action-upterm@v
+        uses: lhotari/action-upterm@v1
+
+
