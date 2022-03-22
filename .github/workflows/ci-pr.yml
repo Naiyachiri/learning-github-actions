@@ -3,29 +3,32 @@ name: Pull Request Quality Check
 
 on:
   push:
-    branches:
-      - naiyachiri/cypress-test
+
 jobs:
-  build-and-push-slug:
-    name: Build Slug And Push for Testing
-    uses: './.github/workflows/build-and-push-image.yml'
-    with:
-      DOCKER_REPO: 'jamesvobui/learning-github-actions'
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  # build-and-push-slug:
+  #   name: Build Slug And Push for Testing
+  #   uses: './.github/workflows/build-and-push-image.yml'
+  #   with:
+  #     DOCKER_REPO: 'jamesvobui/learning-github-actions'
+  #   secrets:
+  #     DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  #     DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
-  debugger-call-flow:
-    runs-on: ubuntu-latest
-    name: Echo the outputs!
-    needs: build-and-push-slug
-    steps:
+  test-ssh:
+    name: Setup upterm session
+    uses: lhotari/action-upterm@v1
 
-      - name: echo the output tag
-        run: echo ${{ needs.build-and-push-slug.outputs.image-tag }}
+  # debugger-call-flow:
+  #   runs-on: ubuntu-latest
+  #   name: Echo the outputs!
+  #   needs: build-and-push-slug
+  #   steps:
 
-      - name: echo the test output
-        run: echo ${{ needs.build-and-push-slug.outputs.test }}
+  #     - name: echo the output tag
+  #       run: echo ${{ needs.build-and-push-slug.outputs.image-tag }}
+
+  #     - name: echo the test output
+  #       run: echo ${{ needs.build-and-push-slug.outputs.test }}
     # runs-on:  ubuntu-latest
     #   steps:
     #     - uses: ./.github/workflows/build-and-cache-image.yml
