@@ -1,0 +1,12 @@
+name: Pull Request Quality Check
+
+on: [push]
+
+jobs:
+  open-ssh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup SSH Session
+        uses: lhotari/action-upterm@v1
+
+
